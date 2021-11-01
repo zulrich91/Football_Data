@@ -50,21 +50,21 @@ def scrap_match_urls(id, name, logs):
                 result_df = pd.concat([result_df, scrap_result_df],axis=0)
             counter=counter+1
             print("Completed {} \nTotal Execution time {} seconds\n".format(counter, time.time()-START_TIME))
-        result_df.to_csv("../data/players_match_details.csv", index=False)
+        result_df.to_csv("../data/players_match_details_partition2.csv", index=False)
 
     except Exception as e:
         print("Exception ->: {}\nConcering player with log(s) ->: {} ".format(e, str(current_log)))
         problematic_logs.append(current_log)
-        pd.DataFrame({'url':problematic_logs}).to_csv("probematic_logs.csv", index=False)
+        pd.DataFrame({'url':problematic_logs}).to_csv("probematic_logs_partition2.csv", index=False)
         counter=counter+1
         print("Completed {} \nTotal Execution time {} seconds\n".format(counter, time.time()-START_TIME))
 
 if __name__ == "__main__":
     try:
-        for chunk in pd.read_csv("../data/all_match_logs_to_scrap.csv", chunksize=10):
+        for chunk in pd.read_csv("../data/all_match_logs_to_scrap_partition2.csv", chunksize=10):
             chunk.apply(lambda x: scrap_match_urls(x["id"], x['name'], eval(x['logs'])), axis=1)
     except Exception as e:
         print("Exception ->: {}\nConcering player with logs ->: {} ".format(e, str(current_log)))
         problematic_logs.append(current_log)
     print("Completed Successfully!!!")
-    pd.DataFrame({'url':problematic_logs}).to_csv("probematic_logs.csv", index=False)
+    pd.DataFrame({'url':problematic_logs}).to_csv("probematic_logs_partition2.csv", index=False)
