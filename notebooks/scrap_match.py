@@ -50,7 +50,7 @@ def scrap_match_urls(id, name, logs):
                 result_df = pd.concat([result_df, scrap_result_df],axis=0)
             counter=counter+1
             print("Completed {} \nTotal Execution time {} seconds\n".format(counter, time.time()-START_TIME))
-        result_df.to_csv("../data/players_match_details.csv", index=False)
+        result_df.to_csv("../data/players_match_details_from_the_others.csv", index=False)
 
     except Exception as e:
         print("Exception ->: {}\nConcering player with log(s) ->: {} ".format(e, str(current_log)))
@@ -61,7 +61,7 @@ def scrap_match_urls(id, name, logs):
 
 if __name__ == "__main__":
     try:
-        for chunk in pd.read_csv("../data/all_match_logs_to_scrap.csv", chunksize=10):
+        for chunk in pd.read_csv("../data/all_match_logs_for_the_others_to_scrap.csv", chunksize=10):
             chunk.apply(lambda x: scrap_match_urls(x["id"], x['name'], eval(x['logs'])), axis=1)
     except Exception as e:
         print("Exception ->: {}\nConcering player with logs ->: {} ".format(e, str(current_log)))
